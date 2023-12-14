@@ -1,0 +1,19 @@
+# Runs the GitHub "super-linter" against commits to check for ansible syntax errors
+# https://github.com/super-linter/super-linter
+
+trigger:
+- main
+
+pool:
+  name: '$your_pool_name'
+
+steps:
+  - script: |
+      docker pull github/super-linter:slim-latest
+      docker run \
+        -e LOG_LEVEL=WARN \
+        -e RUN_LOCAL=true \
+        -e VALIDATE_ANSIBLE=true \
+        -e ANSIBLE_DIRECTORY=/ \
+        -v $(System.DefaultWorkingDirectory):/tmp/lint github/super-linter:slim-latest
+    displayName: 'Lint with Super-Linter'
